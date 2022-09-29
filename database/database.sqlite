@@ -1,0 +1,3 @@
+DB_CONNECTION=sqlite
+DB_DATABASE=/absolute/path/to/database.sqlite
+jdbc:postgresql://localhost:5432/yellow_project
