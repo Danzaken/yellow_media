@@ -24,14 +24,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'last_name',
         'email',
         'phone',
-        'api_token'
-    ];
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var string[]
-     */
-    protected $hidden = [
+        'api_token',
         'password',
     ];
 }

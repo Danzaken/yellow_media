@@ -40,6 +40,5 @@ class CompanyService
             });
         }
         return true;
-
     }
 }

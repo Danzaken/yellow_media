@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Services\CompanyService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
@@ -73,12 +74,12 @@ class UserController extends Controller
 
     public function getCompanies(UserService $userService, CompanyService $companyService)
     {
-        if (!$this->validate($this->request, $this->getGetCompaniesValidateConfig())) {
+        try {
+            return response()->json($companyService->getCompanies(Auth::user()));
+        } catch (Throwable $exception) {
+            var_dump($exception);
             return response()->json(['status' => 'fail'], 401);
         }
-        /** @var User $user */
-        $user = $userService->getUser($this->request->input('email'));
-        return response()->json($companyService->getCompanies($user));
     }
 
     public function addCompanies(UserService $userService, CompanyService $companyService)
@@ -87,11 +88,10 @@ class UserController extends Controller
             if (!$this->validate($this->request, $this->getAddCompaniesValidateConfig())) {
                 return response()->json(['status' => 'fail'], 401);
             }
-            /** @var User $user */
-            $user = $userService->getUser($this->request->input('email'));
-            $companyService->addCompanies($user, $this->request['companies']);
+            $companyService->addCompanies(Auth::user(), $this->request['companies']);
             return response()->json(['status' => 'success']);
         } catch (Throwable $exception) {
+            var_dump($exception);
             return response()->json(['status' => 'fail'], 401);
         }
     }
@@ -99,15 +99,7 @@ class UserController extends Controller
     private function getAddCompaniesValidateConfig()
     {
         return [
-            'email' => 'required|min:3',
             'companies' => 'required',
-        ];
-    }
-
-    private function getGetCompaniesValidateConfig()
-    {
-        return [
-            'email' => 'required|min:3',
         ];
     }
 
@@ -118,6 +110,7 @@ class UserController extends Controller
             'password' => 'required|min:3',
         ];
     }
+
     private function getResetPasswordValidateConfig()
     {
         return [
