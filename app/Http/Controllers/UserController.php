@@ -52,7 +52,6 @@ class UserController extends Controller
         } catch (HttpException $exception) {
             return $this->getResponseByException($exception);
         } catch (Throwable $exception) {
-            var_dump($exception);
             return response()->json(['status' => 'fail'], 400);
         }
     }
@@ -77,7 +76,6 @@ class UserController extends Controller
         try {
             return response()->json($companyService->getCompanies(Auth::user()));
         } catch (Throwable $exception) {
-            var_dump($exception);
             return response()->json(['status' => 'fail'], 401);
         }
     }
@@ -91,7 +89,6 @@ class UserController extends Controller
             $companyService->addCompanies(Auth::user(), $this->request['companies']);
             return response()->json(['status' => 'success']);
         } catch (Throwable $exception) {
-            var_dump($exception);
             return response()->json(['status' => 'fail'], 401);
         }
     }
